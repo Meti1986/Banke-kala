@@ -1,5 +1,5 @@
 
-name: Build BankKala APK
+name: ketabkhane man APK
 
 on:
   workflow_dispatch:
