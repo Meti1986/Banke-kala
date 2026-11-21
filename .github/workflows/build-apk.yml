@@ -15,24 +15,29 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Java
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '17'
 
-      - name: Setup Android
-        uses: android-actions/setup-android@v3
-
       - name: Extract project ZIP
-        run: unzip -o "BankKalaAndroid-phone-build(4).zip" -d .
+        run: |
+          ZIP_FILE=$(find . -maxdepth 1 -name 'BankKalaAndroid-phone-build*.zip' | head -n 1)
+          test -n "$ZIP_FILE"
+          unzip -o "$ZIP_FILE" -d .
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.9'
+
+      - name: Check Android SDK
+        run: |
+          echo "ANDROID_HOME=$ANDROID_HOME"
+          test -d "$ANDROID_HOME/platforms/android-35"
 
       - name: Build APK
         run: gradle -p BankKalaAndroid assembleDebug
