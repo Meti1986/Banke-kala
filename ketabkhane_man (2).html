@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#20382f">
+<title>کتابخانه من</title>
+<style>
+:root{--green:#20382f;--green2:#2d4a3d;--gold:#b79a5b;--paper:#eee5d3;--paper2:#f8f3e9;--ink:#30271f;--muted:#817565;--wood:#4a3023;--line:#d8cbb4;--red:#9b443b;--shadow:0 8px 24px #281b1418}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(135deg,#e9dfcd,#f4eddf 55%,#e5d8c2);color:var(--ink);font-family:Tahoma,"Segoe UI",sans-serif;min-height:100vh}
+header{background:linear-gradient(125deg,#172b24,#294638 60%,#3c2b20);color:#f6eddb;padding:22px 18px 20px;border-bottom:3px solid var(--gold);box-shadow:var(--shadow)}
+.brand{display:flex;align-items:center;gap:12px}.mark{width:48px;height:48px;border:1px solid #c8ac70;border-radius:12px;display:grid;place-items:center;color:#d5bc83;font-size:25px;background:#ffffff0b}.brand h1{font-size:21px;margin:0 0 5px;font-weight:700;letter-spacing:.2px}.brand p{font-size:11px;margin:0;color:#d8c9a9}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:18px}.stat{background:#ffffff0d;border:1px solid #ffffff20;border-radius:12px;padding:10px;text-align:center}.stat b{display:block;color:#e2c987;font-size:21px}.stat span{font-size:10px;color:#e6ddca}
+main{max-width:760px;margin:0 auto;padding:15px 13px 100px}.panel{display:none}.panel.active{display:block}.section-title{font-size:17px;margin:5px 2px 14px;color:var(--green);display:flex;align-items:center;gap:8px}.section-title:before{content:"";width:4px;height:20px;border-radius:5px;background:var(--gold)}
+.card{background:var(--paper2);border:1px solid var(--line);border-radius:15px;padding:15px;margin-bottom:13px;box-shadow:0 3px 12px #49321a0a}.muted{color:var(--muted);font-size:12px;line-height:1.8}.field{margin:11px 0}.field label{display:block;font-size:12px;font-weight:700;color:#544637;margin-bottom:6px}.field input,.field select,.field textarea,.searchbox{width:100%;border:1px solid #d3c5ac;background:#fffdf8;border-radius:10px;padding:12px;color:var(--ink);font:14px Tahoma;outline:none}.field input:focus,.field select:focus,.searchbox:focus{border-color:var(--gold);box-shadow:0 0 0 3px #b79a5b20}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.btn{border:0;border-radius:10px;padding:12px 16px;background:var(--green);color:#fff8e9;font: bold 13px Tahoma;cursor:pointer}.btn.gold{background:var(--gold);color:#241c13}.btn.soft{background:#e7ddc9;color:var(--green);border:1px solid var(--line)}.btn.danger{background:var(--red)}.btn.full{width:100%}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.book{border:1px solid var(--line);border-radius:12px;padding:12px;margin:9px 0;background:#fffdf8}.book h3{margin:0 0 7px;font-size:15px;color:var(--green)}.book p{margin:4px 0;font-size:12px;line-height:1.7;color:#675a49}.pill{display:inline-block;padding:4px 8px;border-radius:20px;font-size:10px;font-weight:bold;background:#e7e0d0;color:#5d503e}.pill.ok{background:#e0eadf;color:#31583a}.pill.out{background:#f2e0d9;color:#8c3e33}.empty{text-align:center;padding:25px 12px;color:var(--muted);font-size:13px}.tabs{position:fixed;bottom:0;left:0;right:0;z-index:5;background:#1d332b;border-top:2px solid var(--gold);display:grid;grid-template-columns:repeat(6,1fr);padding:7px 4px max(8px,env(safe-area-inset-bottom));box-shadow:0 -6px 22px #1b120d22}.tab{border:0;background:none;color:#d5cbb8;font:10px Tahoma;padding:5px 1px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer}.tab .ico{font-size:19px;line-height:1.1}.tab.active{color:#e4c77f}.tab.active .ico{filter:drop-shadow(0 0 4px #e2c98755)}
+.topline{display:flex;justify-content:space-between;align-items:center;gap:8px}.count{font-size:12px;color:var(--muted)}.small{font-size:11px}.hidden{display:none!important}
+@media(max-width:420px){.grid2{grid-template-columns:1fr}.brand h1{font-size:19px}.stats{gap:6px}.stat{padding:9px 4px}.stat b{font-size:19px}.tab{font-size:9px}}
+</style>
+</head>
+<body>
+<header>
+ <div class="brand"><div class="mark">❧</div><div><h1>کتابخانه من</h1><p>مجموعه شخصی کتاب‌ها · به سبک کلاسیک</p></div></div>
+ <div class="stats">
+  <div class="stat"><b id="totalTitles">۰</b><span>عنوان کتاب</span></div>
+  <div class="stat"><b id="totalCopies">۰</b><span>نسخه فیزیکی</span></div>
+  <div class="stat"><b id="loanCopies">۰</b><span>امانت داده‌شده</span></div>
+ </div>
+</header>
+<main>
+<section id="search" class="panel active">
+ <h2 class="section-title">جستجو در کتابخانه</h2>
+ <div class="card">
+  <input id="globalSearch" class="searchbox" placeholder="نام کتاب، نویسنده یا مترجم را جستجو کنید..." oninput="renderSearch()">
+  <p class="muted">جستجو در عنوان کتاب، نویسنده و مترجم؛ وضعیت هر نسخه جداگانه نمایش داده می‌شود.</p>
+  <div id="searchResults"></div>
+ </div>
+</section>
+<section id="books" class="panel">
+ <div class="topline"><h2 class="section-title">کتاب‌ها</h2><span class="count" id="bookCount">۰ نسخه</span></div>
+ <div class="card"><input id="listSearch" class="searchbox" placeholder="فیلتر فهرست کتاب‌ها..." oninput="renderBooks()"><div id="bookList"></div></div>
+</section>
+<section id="status" class="panel">
+ <h2 class="section-title">وضعیت امانت</h2>
+ <div class="card"><input id="statusSearch" class="searchbox" placeholder="نام کتاب یا شناسه نسخه..." oninput="renderStatus()"><p class="muted">وضعیت موجودی هر نسخه را بررسی کنید.</p><div id="statusResults"></div></div>
+</section>
+<section id="loans" class="panel">
+ <h2 class="section-title">ثبت و مدیریت امانت</h2>
+ <div class="card">
+  <div class="field"><label>انتخاب نسخه کتاب</label><select id="loanCopy"></select></div>
+  <div class="field"><label>نام امانت‌گیرنده</label><input id="borrower" placeholder="نام و نام خانوادگی"></div>
+  <div class="field"><label>تاریخ امانت</label><input id="loanDate" type="date"></div>
+  <button class="btn full" onclick="addLoan()">ثبت امانت</button>
+ </div>
+ <div class="card"><h3 style="margin:0 0 10px;color:var(--green);font-size:14px">امانت‌های جاری</h3><div id="activeLoans"></div></div>
+ <div class="card"><h3 style="margin:0 0 10px;color:var(--green);font-size:14px">سوابق امانت</h3><div id="loanHistory"></div></div>
+</section>
+<section id="add" class="panel">
+ <h2 class="section-title">ثبت کتاب جدید</h2>
+ <div class="card">
+  <div class="field"><label>نام کتاب *</label><input id="title" placeholder="عنوان کامل کتاب"></div>
+  <div class="grid2">
+   <div class="field"><label>نویسنده *</label><input id="author" placeholder="نام نویسنده"></div>
+   <div class="field"><label>مترجم</label><input id="translator" placeholder="در صورت لزوم"></div>
+  </div>
+  <div class="grid2">
+   <div class="field"><label>ناشر</label><input id="publisher" placeholder="نام ناشر"></div>
+   <div class="field"><label>سال انتشار</label><input id="year" inputmode="numeric" placeholder="مثلاً ۱۴۰۲"></div>
+  </div>
+  <div class="grid2">
+   <div class="field"><label>تاریخ خرید</label><input id="purchaseDate" type="date"></div>
+   <div class="field"><label>قیمت خرید</label><input id="price" inputmode="decimal" placeholder="مبلغ و واحد پول"></div>
+  </div>
+  <div class="field"><label>مکان نگهداری</label><input id="location" placeholder="مثلاً اتاق، قفسه دوم"></div>
+  <div class="field"><label>تعداد نسخه‌هایی که اضافه می‌کنید</label><input id="copies" type="number" min="1" max="99" value="1"></div>
+  <button class="btn full" onclick="addBook()">ثبت کتاب و نسخه‌ها</button>
+  <p class="muted">برای هر نسخه شناسه مستقل ساخته می‌شود؛ محل نگهداری نسخه‌ها در این نسخه اولیه یکسان است.</p>
+ </div>
+</section>
+<section id="settings" class="panel">
+ <h2 class="section-title">تنظیمات و حفاظت اطلاعات</h2>
+ <div class="card">
+  <h3 style="font-size:14px;color:var(--green)">پشتیبان‌گیری</h3>
+  <p class="muted">از تمام کتاب‌ها، نسخه‌ها و سوابق امانت یک فایل پشتیبان JSON تهیه کنید یا اطلاعات را از فایل قبلی بازیابی کنید.</p>
+  <div class="row"><button class="btn" onclick="backup()">تهیه پشتیبان</button><button class="btn soft" onclick="document.getElementById('restoreFile').click()">بازیابی پشتیبان</button><input id="restoreFile" type="file" accept=".json,application/json" class="hidden" onchange="restoreBackup(event)"></div>
+  <p class="muted" id="backupInfo">پشتیبان در حافظه دستگاه ذخیره می‌شود.</p>
+ </div>
+ <div class="card">
+  <h3 style="font-size:14px;color:var(--red)">حذف کلیه اطلاعات</h3>
+  <p class="muted">این عملیات تمام داده‌های داخل برنامه را حذف می‌کند. فایل‌های پشتیبان ذخیره‌شده جداگانه دست‌نخورده باقی می‌مانند.</p>
+  <button class="btn danger full" onclick="deleteAll()">حذف کلیه اطلاعات</button>
+ </div>
+ <div class="card"><p class="muted">نسخه آزمایشی اولیه · اطلاعات این نسخه در حافظه مرورگر همین دستگاه ذخیره می‌شود. پیش از پاک‌کردن داده‌های مرورگر، پشتیبان تهیه کنید.</p></div>
+</section>
+</main>
+<nav class="tabs">
+ <button class="tab active" data-tab="search" onclick="showTab('search',this)"><span class="ico">⌕</span>جستجو</button>
+ <button class="tab" data-tab="books" onclick="showTab('books',this)"><span class="ico">▤</span>کتاب‌ها</button>
+ <button class="tab" data-tab="status" onclick="showTab('status',this)"><span class="ico">◉</span>وضعیت امانت</button>
+ <button class="tab" data-tab="loans" onclick="showTab('loans',this)"><span class="ico">⇧</span>ثبت امانت</button>
+ <button class="tab" data-tab="add" onclick="showTab('add',this)"><span class="ico">＋</span>ثبت کتاب</button>
+ <button class="tab" data-tab="settings" onclick="showTab('settings',this)"><span class="ico">⚙</span>تنظیمات</button>
+</nav>
+<script>
+const KEY='myLibraryClassic_v1';
+let db=loadDB();
+function loadDB(){try{return JSON.parse(localStorage.getItem(KEY))||{books:[],copies:[],loans:[]}}catch(e){return{books:[],copies:[],loans:[]}}}
+function save(){localStorage.setItem(KEY,JSON.stringify(db));refresh()}
+function uid(prefix){return prefix+'-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,7)}
+function fa(n){return new Intl.NumberFormat('fa-IR').format(n)}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function activeLoan(copyId){return db.loans.find(l=>l.copyId===copyId&&!l.returnDate)}
+function bookFor(copy){return db.books.find(b=>b.id===copy.bookId)}
+function showTab(id,btn){document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id===id));document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t===btn));if(id==='books')renderBooks();if(id==='status')renderStatus();if(id==='loans')renderLoans();if(id==='search')renderSearch()}
+function copyCard(copy){const b=bookFor(copy);if(!b)return'';const loan=activeLoan(copy.id);return `<div class="book"><div class="topline"><h3>${esc(b.title)}</h3><span class="pill ${loan?'out':'ok'}">${loan?'امانت داده شده':'موجود'}</span></div><p>نویسنده: ${esc(b.author)}${b.translator?' · مترجم: '+esc(b.translator):''}</p><p>ناشر: ${esc(b.publisher||'—')} · سال انتشار: ${esc(b.year||'—')}</p><p>شناسه نسخه: ${esc(copy.code)} · مکان: ${esc(copy.location||b.location||'—')}</p>${loan?`<p>امانت‌گیرنده: <b>${esc(loan.borrower)}</b> · تاریخ امانت: ${esc(loan.date)}</p>`:''}<div class="row"><button class="btn soft small" onclick="changeLocation('${copy.id}')">تغییر مکان نسخه</button></div></div>`}
+function renderSearch(){const q=(document.getElementById('globalSearch')?.value||'').trim().toLocaleLowerCase('fa');const el=document.getElementById('searchResults');if(!el)return;let copies=db.copies.filter(c=>{const b=bookFor(c);return b&&(!q||[b.title,b.author,b.translator].join(' ').toLocaleLowerCase('fa').includes(q))});copies.sort((a,b)=>{let A=bookFor(a)?.title||'',B=bookFor(b)?.title||'';return A.localeCompare(B,'fa')});el.innerHTML=copies.length?copies.map(copyCard).join(''):'<div class="empty">موردی پیدا نشد. ابتدا کتابی ثبت کنید یا عبارت دیگری جستجو کنید.</div>'}
+function renderBooks(){const q=(document.getElementById('listSearch')?.value||'').trim().toLocaleLowerCase('fa');let copies=[...db.copies].filter(c=>{let b=bookFor(c);return b&&(!q||[b.title,b.author,b.translator].join(' ').toLocaleLowerCase('fa').includes(q))});copies.sort((a,b)=>(bookFor(a)?.title||'').localeCompare(bookFor(b)?.title||'','fa'));document.getElementById('bookCount').textContent=fa(db.copies.length)+' نسخه · '+fa(db.books.length)+' عنوان';document.getElementById('bookList').innerHTML=copies.length?copies.map(copyCard).join(''):'<div class="empty">هنوز کتابی ثبت نشده است.</div>'}
+function renderStatus(){const q=(document.getElementById('statusSearch')?.value||'').trim().toLocaleLowerCase('fa');let copies=db.copies.filter(c=>{let b=bookFor(c);return b&&(!q||[b.title,b.author,b.translator,c.code].join(' ').toLocaleLowerCase('fa').includes(q))});document.getElementById('statusResults').innerHTML=copies.length?copies.map(copyCard).join(''):'<div class="empty">نسخه‌ای مطابق جستجو پیدا نشد.</div>'}
+function renderLoans(){const sel=document.getElementById('loanCopy');const available=db.copies.filter(c=>!activeLoan(c.id)&&bookFor(c));sel.innerHTML=available.length?available.map(c=>{let b=bookFor(c);return `<option value="${esc(c.id)}">${esc(b.title)} · ${esc(c.code)}</option>`}).join(''):'<option value="">نسخه موجودی برای امانت وجود ندارد</option>';let active=db.loans.filter(l=>!l.returnDate);document.getElementById('activeLoans').innerHTML=active.length?active.map(l=>{let c=db.copies.find(x=>x.id===l.copyId),b=c&&bookFor(c);return `<div class="book"><h3>${esc(b?.title||'کتاب حذف‌شده')}</h3><p>نسخه: ${esc(c?.code||'—')} · امانت‌گیرنده: ${esc(l.borrower)} · تاریخ: ${esc(l.date)}</p><button class="btn soft" onclick="returnLoan('${l.id}')">ثبت بازگشت کتاب</button></div>`}).join(''):'<div class="empty">امانت جاری وجود ندارد.</div>';let hist=db.loans.filter(l=>l.returnDate).slice().reverse();document.getElementById('loanHistory').innerHTML=hist.length?hist.map(l=>{let c=db.copies.find(x=>x.id===l.copyId),b=c&&bookFor(c);return `<div class="book"><h3>${esc(b?.title||'کتاب حذف‌شده')}</h3><p>${esc(l.borrower)} · امانت: ${esc(l.date)} · بازگشت: ${esc(l.returnDate)}</p></div>`}).join(''):'<div class="empty">هنوز سابقه بازگشتی ثبت نشده است.</div>'}
+function changeLocation(copyId){let c=db.copies.find(x=>x.id===copyId);if(!c)return;let next=prompt('مکان نگهداری این نسخه:',c.location||'');if(next===null)return;c.location=next.trim();save()}
+function addBook(){let title=v('title'),author=v('author');if(!title||!author){alert('نام کتاب و نویسنده الزامی است.');return}let count=Math.max(1,Math.min(99,parseInt(v('copies'))||1));let b={id:uid('book'),title,author,translator:v('translator'),publisher:v('publisher'),year:v('year'),purchaseDate:v('purchaseDate'),price:v('price'),location:v('location')};db.books.push(b);for(let i=0;i<count;i++){let n=db.copies.length+1;db.copies.push({id:uid('copy'),bookId:b.id,code:'نسخه-'+String(n).padStart(4,'0'),location:b.location})}save();['title','author','translator','publisher','year','purchaseDate','price','location'].forEach(id=>document.getElementById(id).value='');document.getElementById('copies').value='1';alert(count+' نسخه ثبت شد.');showTab('books',document.querySelector('[data-tab="books"]'))}
+function v(id){return document.getElementById(id).value.trim()}
+function addLoan(){let copyId=v('loanCopy'),borrower=v('borrower'),date=v('loanDate');if(!copyId||!borrower||!date){alert('نسخه کتاب، نام امانت‌گیرنده و تاریخ امانت را وارد کنید.');return}if(activeLoan(copyId)){alert('این نسخه در حال حاضر امانت داده شده است.');return}db.loans.push({id:uid('loan'),copyId,borrower,date,returnDate:''});document.getElementById('borrower').value='';save();alert('امانت ثبت شد.');}
+function returnLoan(id){let l=db.loans.find(x=>x.id===id);if(!l)return;let date=prompt('تاریخ بازگشت را وارد کنید (مثلاً ۱۴۰۵/۰۹/۰۱):');if(!date)return;l.returnDate=date;save()}
+function backup(){let blob=new Blob([JSON.stringify({format:'my-library-backup-v1',createdAt:new Date().toISOString(),data:db},null,2)],{type:'application/json'});let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='my-library-backup-'+new Date().toISOString().slice(0,10)+'.json';a.click();URL.revokeObjectURL(a.href);document.getElementById('backupInfo').textContent='فایل پشتیبان آماده شد: '+new Date().toLocaleString('fa-IR')}
+function restoreBackup(e){let file=e.target.files[0];if(!file)return;let r=new FileReader();r.onload=()=>{try{let x=JSON.parse(r.result);let d=x.data||x;if(!Array.isArray(d.books)||!Array.isArray(d.copies)||!Array.isArray(d.loans))throw Error();if(!confirm('اطلاعات فعلی با اطلاعات فایل پشتیبان جایگزین شود؟'))return;db=d;save();alert('بازیابی اطلاعات انجام شد.')}catch(err){alert('فایل پشتیبان معتبر نیست.')}e.target.value=''};r.readAsText(file)}
+function deleteAll(){if(!confirm('مرحله ۱ از ۳: آیا مطمئن هستید که می‌خواهید تمام کتاب‌ها، نسخه‌ها و سوابق امانت حذف شوند؟'))return;if(!confirm('مرحله ۲ از ۳: این کار اطلاعات کتابخانه را پاک می‌کند. آیا ادامه می‌دهید؟'))return;let phrase=prompt('مرحله ۳ از ۳: برای تأیید نهایی دقیقاً عبارت «حذف کلیه اطلاعات» را وارد کنید.');if(phrase!=='حذف کلیه اطلاعات'){alert('عبارت تأیید مطابقت نداشت؛ هیچ اطلاعاتی حذف نشد.');return}db={books:[],copies:[],loans:[]};save();alert('اطلاعات برنامه حذف شد. فایل‌های پشتیبان قبلی باقی مانده‌اند.')}
+function refresh(){document.getElementById('totalTitles').textContent=fa(db.books.length);document.getElementById('totalCopies').textContent=fa(db.copies.length);document.getElementById('loanCopies').textContent=fa(db.loans.filter(l=>!l.returnDate).length);renderSearch();renderBooks();renderStatus();renderLoans()}
+refresh();
+</script>
+</body></html>
